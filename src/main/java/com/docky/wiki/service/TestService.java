@@ -1,8 +1,7 @@
 package com.docky.wiki.service;
 
-import com.docky.wiki.domain.Demo;
-import com.docky.wiki.domain.DemoExample;
-import com.docky.wiki.mapper.DemoMapper;
+import com.docky.wiki.domain.Test;
+import com.docky.wiki.mapper.TestMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +14,10 @@ import java.util.List;
 @Service
 public class TestService {
     @Autowired
-    private DemoMapper demoMapper;
+    private TestMapper testMapper;
 
-    public List<Demo> list()  {
-        return demoMapper.selectByExample(new DemoExample());
+    public List<Test> list() throws Exception {
+        return testMapper.list();
     }
 
 
