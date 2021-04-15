@@ -1,10 +1,9 @@
 package com.docky.wiki.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * @author Docky
@@ -16,5 +15,10 @@ public class TestController {
     @RequestMapping("/hello")
     public String hello(){
         return "Hello";
+    }
+    @PostMapping("/hello/post")
+    public String helloPost(String name){
+
+        return "Hello World! Post, "+ name;
     }
 }
