@@ -2,6 +2,7 @@ package com.docky.wiki;
 
 
 import ch.qos.logback.classic.Logger;
+import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,6 +12,7 @@ import org.springframework.core.env.Environment;
  * @author Docky
  * @date 2021/4/15 9:52
  */
+@MapperScan("com.docky.wiki.mapper")
 @SpringBootApplication
 public class WikiApplication {
     private  static final Logger LOG = (Logger) LoggerFactory.getLogger(WikiApplication.class);
