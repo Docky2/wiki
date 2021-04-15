@@ -1,6 +1,7 @@
 package com.docky.wiki.controller;
-import com.docky.wiki.domain.Ebook;
+import com.docky.wiki.req.EbookReq;
 import com.docky.wiki.resp.CommonResp;
+import com.docky.wiki.resp.EbookResp;
 import com.docky.wiki.service.EbookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +21,9 @@ public class EbookController {
     @Autowired
     private EbookService ebookService;
     @GetMapping("/list")
-    public CommonResp list() throws Exception{
-        CommonResp<List<Ebook>> resp = new CommonResp<>();
-        List<Ebook> list = ebookService.list();
+    public CommonResp list(EbookReq req) throws Exception{
+        CommonResp<List<EbookResp>> resp = new CommonResp<>();
+        List<EbookResp> list = ebookService.list(req);
         resp.setContent(list);
         return resp;
     }
