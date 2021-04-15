@@ -8,7 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.env.Environment;
 
 /**
- * @author 16067
+ * @author Docky
+ * @date 2021/4/15 9:52
  */
 @SpringBootApplication
 public class WikiApplication {
