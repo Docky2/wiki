@@ -19,4 +19,4 @@ name=Test
 
 ###
 
-GET http://localhost:8081/test/list
+GET http://localhost:8081/demo/list

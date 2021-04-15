@@ -1,6 +1,6 @@
 package com.docky.wiki.controller;
 
-import com.docky.wiki.domain.Test;
+import com.docky.wiki.domain.Demo;
 import com.docky.wiki.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +21,8 @@ public class TestController {
     private  String testHello;
     @Autowired
     private TestService testService;
-
+    @Autowired
+    private TestService demoService;
     @RequestMapping("/hello")
     public String hello(){
         return "Hello"+testHello;
@@ -32,8 +33,8 @@ public class TestController {
         return "Hello World! Post, "+ name;
     }
 
-    @GetMapping("/test/list")
-    public List<Test> list() throws Exception{
-        return testService.list();
+    @GetMapping("/demo/list")
+    public List<Demo> list() throws Exception{
+        return demoService.list();
     }
 }
