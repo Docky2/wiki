@@ -1,4 +1,4 @@
-GET http://localhost:8080/hello
+GET http://localhost:8081/hello
 #Accept: application/json
 
 > {%
@@ -7,7 +7,6 @@ GET http://localhost:8080/hello
      client.log(response.body);
      client.log(JSON.stringify(response.body));
      client.assert(response.status === 200,"返回码不是200");
-     client.assert(response.body === "Hello", "结果验证失败");
  });
  %}
 
