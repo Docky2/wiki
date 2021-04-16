@@ -8,6 +8,7 @@ import com.docky.wiki.resp.EbookResp;
 import com.docky.wiki.util.CopyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -26,7 +27,9 @@ public class EbookService {
         // 理解成where条件
         EbookExample.Criteria criteria = ebookExample.createCriteria();
         // Like 分左匹配或者右匹配 需要自己加上百分号
-        criteria.andNameLike("%" + req.getName() + "%");
+        if(!ObjectUtils.isEmpty(req.getName())) {
+            criteria.andNameLike("%" + req.getName() + "%");
+        }
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
 
         return CopyUtil.copyList(ebookList,EbookResp.class);
