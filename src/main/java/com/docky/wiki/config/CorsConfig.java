@@ -5,18 +5,20 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+//CORS 解决跨域问题
+
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         /* 针对所有的请求地址
-        *  针对所有的接口允许来源
-        *  支持所有Headers
-        *  支持所有的方法如 get post 等
-        *  允许前端带上凭证
-        *  1小时内不需要再预检（发OPTIONS请求）
-        * */
+         *  针对所有的接口允许来源
+         *  支持所有Headers
+         *  支持所有的方法如 get post 等
+         *  允许前端带上凭证
+         *  1小时内不需要再预检（发OPTIONS请求）
+         * */
         registry.addMapping("/**")
                 .allowedOriginPatterns("*")
                 .allowedHeaders(CorsConfiguration.ALL)
