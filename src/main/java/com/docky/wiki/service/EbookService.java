@@ -33,7 +33,7 @@ public class EbookService {
     @Autowired
     private SnowFlake snowFlake;
 
-    public PageResp<EbookQueryResp> list(EbookQueryReq req) {
+    public PageResp<EbookQueryResp> query(EbookQueryReq req) {
         // 分页查询，查第几页，每页三条
         PageHelper.startPage(req.getPage(),req.getSize());
         EbookExample ebookExample = new EbookExample();

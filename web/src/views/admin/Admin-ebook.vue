@@ -5,9 +5,18 @@
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
     <p>
-      <a-button size="large" type="primary" @click="add">
+
+      <a-space>
+        <a-input-search
+            v-model:value="param.name"
+            placeholder="请输入书名"
+            style="width: 200px"
+            @search="handleQuery({page:1,size:pagination.pageSize})"
+        />
+      <a-button size="normal" type="primary" @click="add">
         新增
       </a-button>
+      </a-space>
     </p>
       <a-table :columns="columns"
                :data-source="ebooks"
@@ -16,7 +25,7 @@
                :row-key="record => record.id"
                @change="handleTableChange">
         <template #cover="{ text: cover }">
-          <img v-if="cover" :src="cover" alt="avatar">
+          <img  v-if="cover" :src="cover" alt="avatar">
         </template>
         <template v-slot:action="{ text,record}">
           <a-space size="small">
@@ -68,10 +77,13 @@
 import { defineComponent,onMounted,ref } from 'vue';
 import axios from 'axios';
 import {message} from 'ant-design-vue';
+import {Tool} from '@/util/tool';
 
 export default defineComponent({
   name:'AdminEbook',
   setup() {
+    const param = ref();
+    param.value = {};
     const ebooks = ref();
     const pagination =ref({
       current: 1,  //当前页
@@ -120,7 +132,8 @@ export default defineComponent({
       axios.get("/ebook/list", {
         params: {
           page: params.page,
-          size: params.size
+          size: params.size,
+          name: param.value.name
         }
       }).then((response)=>{
         loading.value = false;
@@ -181,7 +194,7 @@ export default defineComponent({
     * */
     const edit = (record: any) =>{
       modalVisible.value = true;
-      ebook.value = record
+      ebook.value = Tool.copy(record);
     };
     /**
      *  新增
@@ -217,11 +230,11 @@ export default defineComponent({
       columns,
       loading,
       handleTableChange,
-
+      param,
       edit,
       add,
       handleDelete,
-
+      handleQuery,
       ebook,
       modalVisible,
       modalLoading,

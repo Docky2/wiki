@@ -25,7 +25,7 @@ public class EbookController {
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public CommonResp list(@Valid EbookQueryReq req) throws Exception{
         CommonResp<PageResp<EbookQueryResp>> resp = new CommonResp<>();
-        PageResp<EbookQueryResp> list = ebookService.list(req);
+        PageResp<EbookQueryResp> list = ebookService.query(req);
         resp.setContent(list);
         return resp;
     }
