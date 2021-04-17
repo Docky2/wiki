@@ -19,7 +19,8 @@ public class EbookController {
 
     @Autowired
     private EbookService ebookService;
-    @GetMapping("/list")
+
+    @RequestMapping(value = "/list",method = RequestMethod.GET)
     public CommonResp list(EbookQueryReq req) throws Exception{
         CommonResp<PageResp<EbookQueryResp>> resp = new CommonResp<>();
         PageResp<EbookQueryResp> list = ebookService.list(req);
@@ -35,6 +36,15 @@ public class EbookController {
     public CommonResp save(@RequestBody EbookSaveReq req) throws Exception{
         CommonResp resp = new CommonResp<>();
         ebookService.save(req);
+        return resp;
+    }
+    /**
+     * 删除功能
+     * */
+    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    public CommonResp delete(@PathVariable Long id) throws Exception{
+        CommonResp resp = new CommonResp<>();
+        ebookService.delete(id);
         return resp;
     }
 }
