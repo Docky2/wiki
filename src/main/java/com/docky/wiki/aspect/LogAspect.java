@@ -26,11 +26,11 @@ public class LogAspect {
 
     private final static Logger LOG = LoggerFactory.getLogger(LogAspect.class);
 
-    /** 定义一个切点 */
+    /** 定义一个切点  监控所有的Controller  ..代表所有参数 */
     @Pointcut("execution(public * com.docky.*.controller..*Controller.*(..))")
     public void controllerPointcut() {}
 
-
+    /** 前置通知  放置执行业务代码之前，需要去做的事情 */
     @Before("controllerPointcut()")
     public void doBefore(JoinPoint joinPoint) throws Throwable {
 
@@ -69,7 +69,7 @@ public class LogAspect {
         excludefilter.addExcludes(excludeProperties);
         LOG.info("请求参数: {}", JSONObject.toJSONString(arguments, excludefilter));
     }
-
+    /** 环绕通知，在业务内容前面执行一点东西，后面再执行一点东西  */
     @Around("controllerPointcut()")
     public Object doAround(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
