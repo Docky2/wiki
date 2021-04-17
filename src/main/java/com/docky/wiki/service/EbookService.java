@@ -8,6 +8,7 @@ import com.docky.wiki.req.EbookSaveReq;
 import com.docky.wiki.resp.EbookQueryResp;
 import com.docky.wiki.resp.PageResp;
 import com.docky.wiki.util.CopyUtil;
+import com.docky.wiki.util.SnowFlake;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -28,6 +29,9 @@ public class EbookService {
 
     @Autowired(required = false)
     private EbookMapper ebookMapper;
+
+    @Autowired
+    private SnowFlake snowFlake;
 
     public PageResp<EbookQueryResp> list(EbookQueryReq req) {
         // 分页查询，查第几页，每页三条
@@ -56,6 +60,8 @@ public class EbookService {
     public void save(EbookSaveReq req){
         Ebook ebook = CopyUtil.copy(req,Ebook.class);
         if(ObjectUtils.isEmpty(req.getId())){
+            // 新增
+            ebook.setId(snowFlake.nextId());
             ebookMapper.insert(ebook);
         }else{
             ebookMapper.updateByPrimaryKey(ebook);
