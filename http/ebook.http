@@ -1,1 +1,17 @@
 GET http://localhost:8081/ebook/list?page=1&size=3
+
+###
+
+POST http://localhost:8081/ebook/save
+Content-Type: appplication/json
+// json方式提交 需要添加 @ RequestBody 注解
+
+###
+POST http://localhost:80/api/item
+Content-Type: application/x-www-form-urlencoded
+//form表单方式的提交，不需要加@ RequstBody注解
+
+id=99&content=new-element
+
+###
+

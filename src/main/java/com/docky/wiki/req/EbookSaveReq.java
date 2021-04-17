@@ -1,6 +1,6 @@
-package com.docky.wiki.resp;
+package com.docky.wiki.req;
 
-public class EbookResp {
+public class EbookSaveReq {
     private Long id;
 
     private String name;

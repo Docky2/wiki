@@ -3,8 +3,9 @@ package com.docky.wiki.service;
 import com.docky.wiki.domain.Ebook;
 import com.docky.wiki.domain.EbookExample;
 import com.docky.wiki.mapper.EbookMapper;
-import com.docky.wiki.req.EbookReq;
-import com.docky.wiki.resp.EbookResp;
+import com.docky.wiki.req.EbookQueryReq;
+import com.docky.wiki.req.EbookSaveReq;
+import com.docky.wiki.resp.EbookQueryResp;
 import com.docky.wiki.resp.PageResp;
 import com.docky.wiki.util.CopyUtil;
 import com.github.pagehelper.PageHelper;
@@ -28,7 +29,7 @@ public class EbookService {
     @Autowired(required = false)
     private EbookMapper ebookMapper;
 
-    public PageResp<EbookResp> list(EbookReq req) {
+    public PageResp<EbookQueryResp> list(EbookQueryReq req) {
         // 分页查询，查第几页，每页三条
         PageHelper.startPage(req.getPage(),req.getSize());
         EbookExample ebookExample = new EbookExample();
@@ -43,12 +44,22 @@ public class EbookService {
         // 一般返回Total 由前端去计算总页数
         Log.info("总行数：{}",pageInfo.getTotal());
         Log.info("总页数，{}",pageInfo.getPages());
-        List<EbookResp> list = CopyUtil.copyList(ebookList,EbookResp.class);
-        PageResp<EbookResp> pageResp = new PageResp<>();
+        List<EbookQueryResp> list = CopyUtil.copyList(ebookList, EbookQueryResp.class);
+        PageResp<EbookQueryResp> pageResp = new PageResp<>();
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(list);
         return pageResp;
     }
-
+    /**
+    * 保存
+    * */
+    public void save(EbookSaveReq req){
+        Ebook ebook = CopyUtil.copy(req,Ebook.class);
+        if(ObjectUtils.isEmpty(req.getId())){
+            ebookMapper.insert(ebook);
+        }else{
+            ebookMapper.updateByPrimaryKey(ebook);
+        }
+    }
 
 }
