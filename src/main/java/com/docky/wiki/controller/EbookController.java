@@ -35,7 +35,7 @@ public class EbookController {
      * @RequestBody这个注解对应的就是json方式的(POST)提交。
      * */
     @RequestMapping(value = "/save",method = RequestMethod.POST)
-    public CommonResp save(@RequestBody EbookSaveReq req) throws Exception{
+    public CommonResp save(@RequestBody @Valid EbookSaveReq req) throws Exception{
         CommonResp resp = new CommonResp<>();
         ebookService.save(req);
         return resp;
