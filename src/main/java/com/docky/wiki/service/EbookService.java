@@ -5,7 +5,12 @@ import com.docky.wiki.domain.EbookExample;
 import com.docky.wiki.mapper.EbookMapper;
 import com.docky.wiki.req.EbookReq;
 import com.docky.wiki.resp.EbookResp;
+import com.docky.wiki.resp.PageResp;
 import com.docky.wiki.util.CopyUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -18,11 +23,14 @@ import java.util.List;
  */
 @Service
 public class EbookService {
+    private static final Logger Log = LoggerFactory.getLogger(EbookService.class);
 
     @Autowired(required = false)
     private EbookMapper ebookMapper;
 
-    public List<EbookResp> list(EbookReq req) {
+    public PageResp<EbookResp> list(EbookReq req) {
+        // 分页查询，查第几页，每页三条
+        PageHelper.startPage(req.getPage(),req.getSize());
         EbookExample ebookExample = new EbookExample();
         // 理解成where条件
         EbookExample.Criteria criteria = ebookExample.createCriteria();
@@ -31,8 +39,15 @@ public class EbookService {
             criteria.andNameLike("%" + req.getName() + "%");
         }
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
-
-        return CopyUtil.copyList(ebookList,EbookResp.class);
+        PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
+        // 一般返回Total 由前端去计算总页数
+        Log.info("总行数：{}",pageInfo.getTotal());
+        Log.info("总页数，{}",pageInfo.getPages());
+        List<EbookResp> list = CopyUtil.copyList(ebookList,EbookResp.class);
+        PageResp<EbookResp> pageResp = new PageResp<>();
+        pageResp.setTotal(pageInfo.getTotal());
+        pageResp.setList(list);
+        return pageResp;
     }
 
 
