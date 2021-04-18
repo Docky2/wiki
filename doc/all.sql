@@ -29,8 +29,8 @@ insert into `ebook`(id,name,description) values (4,'Mysql 入门教程','零基�
 
 drop table if exists `category`;
 create table `category`(
-    `id` bigint not null comment 'id',
-    `parent` bigint not null default 0 comment '父id',
+    `id` bigint(20) not null comment 'id',
+    `parent` bigint(20) not null default 0 comment '父id',
     `name` varchar(50) not null comment '名称',
     `sort` int comment '顺序',
      primary key (`id`)
@@ -51,3 +51,5 @@ insert into `category`(id,parent,name,sort) values (500,000,'其他',500);
 insert into `category`(id,parent,name,sort) values (501,500,'服务器',501);
 insert into `category`(id,parent,name,sort) values (502,500,'开发工具',502);
 insert into `category`(id,parent,name,sort) values (503,500,'热门服务端语言',503);
+
+delete from category where id = 38881020761739264
