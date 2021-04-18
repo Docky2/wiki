@@ -40,6 +40,6 @@
                              targetPackage="com.docky.wiki.mapper"
                              type="XMLMAPPER"/>
 
-        <table tableName="ebook" domainObjectName="Ebook"/>
+        <table tableName="category" />
     </context>
 </generatorConfiguration>
