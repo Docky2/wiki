@@ -41,7 +41,7 @@ insert into `category`(id,parent,name,sort) values (101,100,'Vue',101);
 insert into `category`(id,parent,name,sort) values (102,100,'HTML&CSS',102);
 insert into `category`(id,parent,name,sort) values (200,000,'Java',200);
 insert into `category`(id,parent,name,sort) values (201,200,'基础应用',201);
-insert into `category`(id,parent,name,sort) values (202,000,'框架应用',202);
+insert into `category`(id,parent,name,sort) values (202,200,'框架应用',202);
 insert into `category`(id,parent,name,sort) values (300,000,'Python',300);
 insert into `category`(id,parent,name,sort) values (301,300,'基础应用',301);
 insert into `category`(id,parent,name,sort) values (302,300,'进阶方向应用',302);
