@@ -175,9 +175,15 @@ export default defineComponent({
         const data = response.data;
         if(data.success){
           categorys = data.content;
-          console.log("原始数组：",categorys);
           level1.value = [];
           level1.value = Tool.array2Tree(categorys,0);
+
+          handleQuery({
+            page: 1,
+            size: pagination.value.pageSize
+          });
+
+
         }else{
           message.error(data.message);
         }
@@ -268,10 +274,7 @@ export default defineComponent({
 
     onMounted(()=>{
       handleQueryCategory();
-      handleQuery({
-        page: 1,
-        size: pagination.value.pageSize
-      });
+
     });
 
     return{
