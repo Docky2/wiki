@@ -55,7 +55,7 @@
           <a-select-option value="0">
             无
           </a-select-option>
-          <a-select-option v-for="c in level1" :key="c.id" :disabled="category.id===c.id">
+          <a-select-option v-for="c in level1" :key="c.id" :disable="category.id===c.id">
             {{c.name}}
           </a-select-option>
         </a-select>
