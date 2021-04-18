@@ -6,12 +6,11 @@
           v-model:selectedKeys="selectedKeys2"
           v-model:openKeys="openKeys"
           :style="{ height: '100%', borderRight: 0 }"
+          @click="handleClick"
       >
         <a-menu-item key="welcome">
-          <router-link :to="'/'">
             <MailOutlined />
             <span>欢迎</span>
-          </router-link>
         </a-menu-item>
         <a-sub-menu v-for="item in level1" :key="item.id">
           <template v-slot:title>
@@ -26,10 +25,11 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
+    <div v-show="isShowWelcome" class="welcome">
+      <h1>欢迎使用！</h1>
+    </div>
 
-
-
-      <a-list :data-source="ebooks" :grid="{ gutter: 20, column: 3 }" :pagination="pagination" item-layout="vertical" size="large">
+      <a-list v-show="!isShowWelcome" :data-source="ebooks" :grid="{ gutter: 20, column: 3 }" :pagination="pagination" item-layout="vertical" size="large">
 
         <template #renderItem="{ item }">
           <a-list-item key="item.name">
@@ -81,7 +81,15 @@ export default defineComponent({
             ebooks.value = data.content.list;
           });
     })
+    const isShowWelcome = ref(true);
 
+    const handleClick = (value:any) =>{
+      if(value.key==='welcome'){
+        isShowWelcome.value=true;
+      }else{
+        isShowWelcome.value=false;
+      }
+    }
     const level1 = ref();
     let categorys: any;
 
@@ -116,6 +124,8 @@ export default defineComponent({
       ],
       level1,
       handleQueryCategory,
+      handleClick,
+      isShowWelcome
     }
   }
 });
