@@ -2,14 +2,15 @@ package com.docky.wiki.controller;
 
 import com.docky.wiki.req.CategoryQueryReq;
 import com.docky.wiki.req.CategorySaveReq;
-import com.docky.wiki.resp.CommonResp;
 import com.docky.wiki.resp.CategoryQueryResp;
+import com.docky.wiki.resp.CommonResp;
 import com.docky.wiki.resp.PageResp;
 import com.docky.wiki.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author Docky
@@ -21,6 +22,14 @@ public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @RequestMapping(value = "/all",method = RequestMethod.GET)
+    public CommonResp all() throws Exception{
+        CommonResp<List<CategoryQueryResp>> resp = new CommonResp<>();
+        List<CategoryQueryResp> list = categoryService.all();
+        resp.setContent(list);
+        return resp;
+    }
 
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public CommonResp list(@Valid CategoryQueryReq req) throws Exception{

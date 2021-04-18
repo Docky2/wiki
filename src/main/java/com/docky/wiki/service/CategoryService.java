@@ -32,25 +32,35 @@ public class CategoryService {
 
     @Autowired
     private SnowFlake snowFlake;
-
+/**
+ * 分页查询
+ * */
     public PageResp<CategoryQueryResp> query(CategoryQueryReq req) {
         // 分页查询，查第几页，每页三条
         PageHelper.startPage(req.getPage(),req.getSize());
         CategoryExample categoryExample = new CategoryExample();
+        categoryExample.setOrderByClause("sort asc");
         // 理解成where条件
         CategoryExample.Criteria criteria = categoryExample.createCriteria();
-        // Like 分左匹配或者右匹配 需要自己加上百分号
-
         List<Category> categoryList = categoryMapper.selectByExample(categoryExample);
         PageInfo<Category> pageInfo = new PageInfo<>(categoryList);
         // 一般返回Total 由前端去计算总页数
         Log.info("总行数：{}",pageInfo.getTotal());
-        Log.info("总页数，{}",pageInfo.getPages());
         List<CategoryQueryResp> list = CopyUtil.copyList(categoryList, CategoryQueryResp.class);
         PageResp<CategoryQueryResp> pageResp = new PageResp<>();
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(list);
         return pageResp;
+    }
+
+    public List<CategoryQueryResp> all() {
+        // 分页查询，查第几页，每页三条
+        CategoryExample categoryExample = new CategoryExample();
+        categoryExample.setOrderByClause("sort asc");
+        List<Category> categoryList = categoryMapper.selectByExample(categoryExample);
+        List<CategoryQueryResp> resp = CopyUtil.copyList(categoryList, CategoryQueryResp.class);
+
+        return resp;
     }
     /**
     * 保存
