@@ -43,6 +43,9 @@ public class EbookService {
         if(!ObjectUtils.isEmpty(req.getName())) {
             criteria.andNameLike("%" + req.getName() + "%");
         }
+        if(!ObjectUtils.isEmpty(req.getCategoryId2())) {
+            criteria.andCategory2IdEqualTo(req.getCategoryId2());
+        }
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
         PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
         // 一般返回Total 由前端去计算总页数

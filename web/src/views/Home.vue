@@ -29,7 +29,7 @@
       <h1>欢迎使用！</h1>
     </div>
 
-      <a-list v-show="!isShowWelcome" :data-source="ebooks" :grid="{ gutter: 20, column: 3 }" :pagination="pagination" item-layout="vertical" size="large">
+      <a-list v-show="!isShowWelcome" :data-source="ebooks" :grid="{ gutter: 20, column: 3 }" :pagination="false" item-layout="vertical" size="large">
 
         <template #renderItem="{ item }">
           <a-list-item key="item.name">
@@ -66,28 +66,34 @@ export default defineComponent({
   name: 'Home',
   setup() {
     const ebooks = ref();  //ref() 函数让其变为一个响应式的数据
+    let categoryId2 = 0;
 
-
-
-    onMounted(() => {
-      handleQueryCategory();
+    const handleQueryEbook =()=>{
       axios.get("/ebook/list",{
         params: {
           page: 1,
-          size: 100
+          size: 100,
+          categoryId2: categoryId2,
         }
       }).then((response) => {
-            const data = response.data;
-            ebooks.value = data.content.list;
-          });
+        const data = response.data;
+        ebooks.value = data.content.list;
+      });
+    }
+
+    onMounted(() => {
+      handleQueryCategory();
+
     })
     const isShowWelcome = ref(true);
 
     const handleClick = (value:any) =>{
       if(value.key==='welcome'){
         isShowWelcome.value=true;
-      }else{
+      }else {
+        categoryId2 = value.key;
         isShowWelcome.value=false;
+        handleQueryEbook();
       }
     }
     const level1 = ref();
