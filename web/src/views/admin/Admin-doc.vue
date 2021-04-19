@@ -45,8 +45,9 @@
       :confirm-loading="modalLoading"
       title="文档表单"
       @ok="handleModalOk"
+      style="width: auto"
   >
-    <a-form :label-col="{ span: 6}" :model="doc">
+    <a-form :label-col="{ span: 6}" :model="doc" >
       <a-form-item label="名称">
         <a-input v-model:value="doc.name" />
       </a-form-item>
@@ -58,25 +59,18 @@
           :replaceFields="{title: 'name',key: 'id', value: 'id'}"
           :tree-data="treeSelectData"
           placeholder="请选择父文档"
-          style="width: 100%"
           tree-default-expand-all
       >
 
       </a-tree-select>
       </a-form-item>
 
-      <a-form-item label="父文档">
-        <a-select v-model:value = "doc.parent" style="width: 175px">
-          <a-select-option value="0">
-            无
-          </a-select-option>
-          <a-select-option v-for="c in level1" :key="c.id" :disable="doc.id===c.id">
-            {{c.name}}
-          </a-select-option>
-        </a-select>
-      </a-form-item>
+
       <a-form-item label="顺序">
         <a-input v-model:value="doc.sort" />
+      </a-form-item>
+      <a-form-item label="内容" >
+        <div id="content"></div>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -92,6 +86,7 @@ import {useRoute} from "vue-router";
 import { Modal } from 'ant-design-vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { createVNode } from 'vue';
+import E from 'wangeditor';
 
 export default defineComponent({
   name:'AdminDoc',
@@ -161,12 +156,16 @@ export default defineComponent({
     onMounted(()=>{
       handleQuery();
     })
+
+
     // --------- 表单 ----------
     const treeSelectData = ref();
     treeSelectData.value=[];
     const doc = ref({});
     const modalVisible = ref(false);
     const modalLoading = ref(false);
+    const editor = new E('#content')
+
     const handleModalOk = () =>{
       modalLoading.value = true;
       axios.post("/doc/save",doc.value).then((response)=>{
@@ -239,6 +238,7 @@ export default defineComponent({
     *  编辑
     * */
     const edit = (record: any) =>{
+
       modalVisible.value = true;
       doc.value = Tool.copy(record);
 
@@ -246,6 +246,10 @@ export default defineComponent({
       setDisable(treeSelectData.value,record.id);
 
       treeSelectData.value.unshift({id:0,name:'无'});
+      setTimeout(function (){
+        editor.create();
+      },100)
+
     };
     /**
      *  新增
@@ -258,6 +262,11 @@ export default defineComponent({
       };
       treeSelectData.value = Tool.copy(level1.value);
       treeSelectData.value.unshift({id:0,name:'无'});
+      setTimeout(function (){
+        editor.create();
+      },100)
+
+
     };
 
     /**
