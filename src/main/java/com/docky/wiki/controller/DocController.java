@@ -2,14 +2,16 @@ package com.docky.wiki.controller;
 
 import com.docky.wiki.req.DocQueryReq;
 import com.docky.wiki.req.DocSaveReq;
-import com.docky.wiki.resp.DocQueryResp;
 import com.docky.wiki.resp.CommonResp;
+import com.docky.wiki.resp.DocQueryResp;
 import com.docky.wiki.resp.PageResp;
 import com.docky.wiki.service.DocService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -52,9 +54,14 @@ public class DocController {
     /**
      * 删除功能
      * */
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
-    public CommonResp delete(@PathVariable Long id) throws Exception{
+    @RequestMapping(value = "/delete/{idsStr}",method = RequestMethod.DELETE)
+    public CommonResp delete(@PathVariable String idsStr) throws Exception{
         CommonResp resp = new CommonResp<>();
+        List<String> ids = Arrays.asList(idsStr.split(","));
+        List<Long> id = new ArrayList<>(ids.size());
+        for(String s:ids){
+            id.add(Long.parseLong(s));
+        }
         docService.delete(id);
         return resp;
     }

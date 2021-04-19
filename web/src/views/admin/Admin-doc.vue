@@ -145,10 +145,8 @@ export default defineComponent({
 
         if(data.success){
           docs.value = data.content;
-          console.log("原始数组：",docs.value);
           level1.value = [];
           level1.value = Tool.array2Tree(docs.value,0);
-          console.log("树形结构",level1.value);
         }else{
           message.error(data.message);
         }
@@ -195,18 +193,41 @@ export default defineComponent({
           node.disabled = true;
           const children = node.children;
           if(Tool.isNotEmpty(children)){
-            for(let j=0;i<treeSelectData.length;j++){
+            for(let j=0;j<children.length;j++){
               setDisable(children,children[j].id);
             }
-          }else {
-            const children = node.children;
-            if(Tool.isNotEmpty(children)){
+          }
+        }else {
+          const children = node.children;
+          if(Tool.isNotEmpty(children)){
               setDisable(children,id);
             }
           }
         }
       }
-    }
+
+
+    const ids : Array<string>= [];
+    const getDeleteIds = (treeSelectData: any,id:any) =>{
+      //遍历数组,即遍历某一层节点
+      for (let i = 0;i<treeSelectData.length;i++){
+        const node = treeSelectData[i];
+        if(node.id===id){
+          ids.push(id);
+          const children = node.children;
+          if(Tool.isNotEmpty(children)){
+            for(let j=0;j<children.length;j++){
+              getDeleteIds(children,children[j].id);
+            }
+          }
+        }else {
+            const children = node.children;
+            if(Tool.isNotEmpty(children)){
+              getDeleteIds(children,id);
+            }
+          }
+        }
+      };
 
 
 
@@ -240,7 +261,9 @@ export default defineComponent({
      * */
 
     const handleDelete = (id: number) =>{
-      axios.delete("/doc/delete/"+ id).then((response)=>{
+      getDeleteIds(level1.value,id);
+
+      axios.delete("/doc/delete/"+ ids.join(",")).then((response)=>{
         const data = response.data; // data = commonResp
 
         if (data.success){
