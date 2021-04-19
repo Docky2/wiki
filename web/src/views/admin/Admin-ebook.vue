@@ -32,9 +32,16 @@
         </template>
         <template v-slot:action="{text,record}">
           <a-space size="small">
+              <router-link to="/admin/doc">
+                <a-button type="primary" >
+                  文档管理
+                </a-button>
+              </router-link>
+
             <a-button type="primary" @click="edit(record)">
               编辑
             </a-button>
+
             <a-popconfirm
                 cancel-text="否"
                 ok-text="是"
@@ -239,8 +246,6 @@ export default defineComponent({
     const edit = (record: any) =>{
       modalVisible.value = true;
       ebook.value = Tool.copy(record);
-      console.log("category1Id",ebook.value.category1Id,typeof(ebook.value.category1Id))
-      console.log("category2Id",ebook.value.category2Id,typeof(ebook.value.category2Id))
 
       categoryIds.value = [String(ebook.value.category1Id),String(ebook.value.category2Id)]
     };
