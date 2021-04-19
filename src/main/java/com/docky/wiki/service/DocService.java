@@ -1,7 +1,9 @@
 package com.docky.wiki.service;
 
+import com.docky.wiki.domain.Content;
 import com.docky.wiki.domain.Doc;
 import com.docky.wiki.domain.DocExample;
+import com.docky.wiki.mapper.ContentMapper;
 import com.docky.wiki.mapper.DocMapper;
 import com.docky.wiki.req.DocQueryReq;
 import com.docky.wiki.req.DocSaveReq;
@@ -29,6 +31,9 @@ public class DocService {
 
     @Autowired(required = false)
     private DocMapper docMapper;
+
+    @Autowired(required = false)
+    private ContentMapper contentMapper;
 
     @Autowired
     private SnowFlake snowFlake;
@@ -67,12 +72,21 @@ public class DocService {
     * */
     public void save(DocSaveReq req){
         Doc doc = CopyUtil.copy(req,Doc.class);
+        Content content = CopyUtil.copy(req,Content.class);
+        // 不存在则插入
         if(ObjectUtils.isEmpty(req.getId())){
             // 新增
             doc.setId(snowFlake.nextId());
             docMapper.insert(doc);
+
+            content.setId(doc.getId());
+            contentMapper.insert(content);
         }else{
+            // 存在则更新
             docMapper.updateByPrimaryKey(doc);
+            //更新大字段 用 BOLBS
+            contentMapper.updateByPrimaryKeyWithBLOBs(content);
+
         }
     }
 

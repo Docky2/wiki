@@ -84,7 +84,7 @@
               <a-input v-model:value="doc.sort" placeholder="顺序"/>
             </a-form-item>
             <a-form-item label="内容:">
-              <div id="content"></div>
+              <div id="content" ></div>
             </a-form-item>
           </a-form>
 
@@ -188,13 +188,15 @@ export default defineComponent({
     // --------- 表单 ----------
     const treeSelectData = ref();
     treeSelectData.value=[];
-    const doc = ref({});
+    const doc = ref();
+    doc.value = {};
     const modalVisible = ref(false);
     const modalLoading = ref(false);
     const editor = new E('#content')
     editor.config.zIndex = 0;
-    const handleModalSave = () =>{
+    const handleSave = () =>{
       modalLoading.value = true;
+      doc.value.content = editor.txt.html();
       axios.post("/doc/save",doc.value).then((response)=>{
         const data = response.data; // data = commonResp
         modalLoading.value = false;
@@ -332,7 +334,7 @@ export default defineComponent({
       doc,
       modalVisible,
       modalLoading,
-      handleModalSave,
+      handleSave,
 
       treeSelectData
     }

@@ -76,6 +76,7 @@ insert into `doc`(id,ebook_id,parent,name,sort,view_count,vote_count) values (6,
 drop table if exists `content`;
 create table `content`(
     `id` bigint not null comment '文档id',
-    `content` mediumtext not null comment '内容',
-    primary key (`id`)
+    `content` mediumtext  comment '内容',
+    primary key (`id`),
+    foreign key (`id`) references doc(`id`)
 )engine =innodb default charset=utf8mb4 comment ='文档内容';
