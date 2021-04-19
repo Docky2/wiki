@@ -20,11 +20,14 @@
               </a-form-item>
             </a-form>
           </p>
-          <a-table :columns="columns"
+          <a-table
+                   v-if="level1.length > 0"
+                   :columns="columns"
                    :data-source="level1"
                    :loading="Loading"
                    :pagination="false"
                    :row-key="record => record.id"
+                   :default-expand-all-rows="true"
           >
             <template #name="{ text,record }">
                 {{record.sort}} {{text}}
@@ -39,7 +42,7 @@
                     ok-text="是"
                     title="删除后不可恢复，确认删除?"
                     @confirm="handleDelete(record.id)"
-                ><a-button size="small" type="danager">
+                ><a-button size="small" type="danger">
                   删除
                 </a-button>
                 </a-popconfirm>
@@ -150,6 +153,7 @@ export default defineComponent({
      * */
 
     const level1 = ref();
+    level1.value = [];
 
     /**
      * 数据查询
