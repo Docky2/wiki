@@ -1,11 +1,13 @@
 <template>
   <a-layout>
     <a-layout-content :style="{background:'#fff',padding:'24px',margin:0,minHeight:'280px'}">
+      <h3 v-if="level1.length === 0">对不起，找不到相关文档！</h3>
       <a-row>
         <a-col :span="6">
           <a-tree
            v-if = "level1.length>0"
            :default-expand-all="true"
+           :defaultSelectedKeys="defaultSelectedKeys"
            :replace-fields="{title: 'name',key:'id',value:'id'}"
            :tree-data="level1"
            @select="onSelect"
@@ -37,7 +39,8 @@ export default defineComponent({
 
     const docs = ref();
     const html = ref();
-
+    const defaultSelectedKeys = ref();
+    defaultSelectedKeys.value = [];
     const level1 = ref();
     level1.value = [];
 
@@ -80,6 +83,12 @@ export default defineComponent({
           docs.value = data.content;
           level1.value = [];
           level1.value = Tool.array2Tree(docs.value,0);
+
+          if(Tool.isNotEmpty(level1)){
+            defaultSelectedKeys.value = [level1.value[0].id];
+            handleQueryContent(level1.value[0].id);
+          }
+
         }else{
           message.error(data.message);
         }
@@ -95,6 +104,7 @@ export default defineComponent({
       level1,
       html,
       onSelect,
+      defaultSelectedKeys,
     }
   },
 });

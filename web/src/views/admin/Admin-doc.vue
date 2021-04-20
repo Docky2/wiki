@@ -232,7 +232,9 @@ export default defineComponent({
     // --------- 表单 ----------
 
     const doc = ref();
-    doc.value = {};
+    doc.value = {
+        ebookId:route.query.ebookId
+    };
     const modalLoading = ref(false);
     const editor = new E('#content')
     editor.config.zIndex = 0;
