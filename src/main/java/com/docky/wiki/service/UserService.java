@@ -2,11 +2,13 @@ package com.docky.wiki.service;
 
 import com.docky.wiki.domain.User;
 import com.docky.wiki.domain.UserExample;
+import com.docky.wiki.exception.BusinessException;
+import com.docky.wiki.exception.BusinessExceptionCode;
 import com.docky.wiki.mapper.UserMapper;
 import com.docky.wiki.req.UserQueryReq;
 import com.docky.wiki.req.UserSaveReq;
-import com.docky.wiki.resp.UserQueryResp;
 import com.docky.wiki.resp.PageResp;
+import com.docky.wiki.resp.UserQueryResp;
 import com.docky.wiki.util.CopyUtil;
 import com.docky.wiki.util.SnowFlake;
 import com.github.pagehelper.PageHelper;
@@ -15,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
@@ -41,7 +44,7 @@ public class UserService {
         UserExample.Criteria criteria = userExample.createCriteria();
         // Like 分左匹配或者右匹配 需要自己加上百分号
         if(!ObjectUtils.isEmpty(req.getUsername())) {
-            criteria.andNameLike("%" + req.getUsername() + "%");
+            criteria.andUsernameLike("%" + req.getUsername() + "%");
         }
 
         List<User> userList = userMapper.selectByExample(userExample);
@@ -61,9 +64,14 @@ public class UserService {
     public void save(UserSaveReq req){
         User user = CopyUtil.copy(req,User.class);
         if(ObjectUtils.isEmpty(req.getId())){
-            // 新增
-            user.setId(snowFlake.nextId());
-            userMapper.insert(user);
+            if(ObjectUtils.isEmpty(selectByUsername(req.getUsername()))){
+                // 新增
+                user.setId(snowFlake.nextId());
+                userMapper.insert(user);
+            }else{
+                // 用户名已存在
+                throw new BusinessException(BusinessExceptionCode.USERNAME_EXIST);
+            }
         }else{
             userMapper.updateByPrimaryKey(user);
         }
@@ -74,6 +82,19 @@ public class UserService {
      * */
     public void delete(Long id){
        userMapper.deleteByPrimaryKey(id);
+    }
+
+    public User selectByUsername(String username){
+
+        UserExample userExample = new UserExample();
+        UserExample.Criteria criteria = userExample.createCriteria();
+        criteria.andUsernameEqualTo(username);
+        List<User> userList = userMapper.selectByExample(userExample);
+        if(CollectionUtils.isEmpty(userList)){
+            return null;
+        }else{
+            return userList.get(0);
+        }
     }
 
 }
