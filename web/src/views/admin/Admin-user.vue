@@ -55,13 +55,14 @@
       @ok="handleModalOk"
   >
     <a-form :label-col="{ span: 6}" :model="user" :wrapper-col="{ span: 18}">
-      <a-form-item label="登陆名">
-        <a-input v-model:value="user.username"  />
+      <a-form-item label="用户名">
+                                                        <!--   !!user.id 绕过类型检查   -->
+        <a-input v-model:value="user.username"  :disabled="!!user.id" />
       </a-form-item>
       <a-form-item label="昵称">
         <a-input v-model:value="user.name" />
       </a-form-item>
-      <a-form-item v-show="!user.id" label="密码">
+      <a-form-item  label="密码">
         <a-input v-model:value="user.password" type="password" />
       </a-form-item>
     </a-form>
@@ -91,6 +92,9 @@ import { defineComponent,onMounted,ref } from 'vue';
 import axios from 'axios';
 import {message} from 'ant-design-vue';
 import {Tool} from '@/util/tool';
+
+declare let hexMd5: any ;
+declare let KEY :any ;
 
 export default defineComponent({
   name:'AdminUser',
@@ -168,7 +172,8 @@ export default defineComponent({
     const modalLoading = ref(false);
     const handleModalOk = () => {
       modalLoading.value = true;
-
+      // KEY === 盐值
+      user.value.password = hexMd5(user.value.password + KEY);
       axios.post("/user/save", user.value).then((response) => {
         modalLoading.value = false;
         const data = response.data; // data = commonResp

@@ -7,6 +7,7 @@ import com.docky.wiki.resp.UserQueryResp;
 import com.docky.wiki.resp.PageResp;
 import com.docky.wiki.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -36,6 +37,7 @@ public class UserController {
      * */
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     public CommonResp save(@RequestBody @Valid UserSaveReq req) throws Exception{
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp resp = new CommonResp<>();
         userService.save(req);
         return resp;

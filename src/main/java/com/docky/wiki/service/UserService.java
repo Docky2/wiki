@@ -72,8 +72,12 @@ public class UserService {
                 // 用户名已存在
                 throw new BusinessException(BusinessExceptionCode.USERNAME_EXIST);
             }
-        }else{
-            userMapper.updateByPrimaryKey(user);
+        }
+        else{
+            // 防止前端绕过disabled直接修改后端用户名
+            // Selective当字段为空时不更新 该字段
+            user.setUsername(null);
+            userMapper.updateByPrimaryKeySelective(user);
         }
     }
 
