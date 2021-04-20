@@ -5,6 +5,7 @@ import AdminEbook from '../views/admin/Admin-ebook.vue'
 import AdminCategory from '../views/admin/Admin-category.vue'
 import AdminDoc from '../views/admin/Admin-doc.vue'
 import Doc from '../views/Doc.vue';
+import AdminUser from '../views/admin/Admin-user.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -39,6 +40,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/admin/doc',
     name: 'AdminDoc',
     component: AdminDoc
+  },
+  {
+    path: '/admin/user',
+    name: 'AdminUser',
+    component: AdminUser
   },
 ]
 

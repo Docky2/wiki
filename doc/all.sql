@@ -91,3 +91,5 @@ create table `user`(
     primary key (`id`),
     unique key `login_name_unique` (`username`)
 ) engine =innodb default charset = utf8mb4 comment '用户';
+
+insert into `user` (`id`,`username`,`name`,`password`) values(1,'test','测试','test')
