@@ -65,4 +65,13 @@ public class DocController {
         docService.delete(id);
         return resp;
     }
+
+
+    @RequestMapping(value = "/find-content/{id}",method = RequestMethod.GET)
+    public CommonResp findContent(@PathVariable Long id) throws Exception{
+        CommonResp<String> resp = new CommonResp<>();
+        String content  = docService.findContent(id);
+        resp.setContent(content);
+        return resp;
+    }
 }

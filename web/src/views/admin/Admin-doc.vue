@@ -95,15 +95,7 @@
 
     </a-layout-content>
   </a-layout>
-<!--  <a-modal-->
-<!--      v-model:visible="modalVisible"-->
-<!--      :confirm-loading="modalLoading"-->
-<!--      title="文档表单"-->
-<!--      @ok="handleModalSave"-->
-<!--      style="width: auto"-->
-<!--  >-->
 
-<!--  </a-modal>-->
 </template>
 
 
@@ -156,6 +148,25 @@ export default defineComponent({
     level1.value = [];
 
     /**
+     * 内容查询
+     **/
+    const handleQueryContent = () => {
+      loading.value = true;
+      // 如果不清空现有数据，则编辑保存重新加载数据后，再点编辑，则列表显示的还是编辑前的数据
+      axios.get("/doc/find-content/"+ doc.value.id).then((response)=>{
+        loading.value = false;
+        const data = response.data;
+
+        if(data.success){
+          editor.txt.html(data.content);
+        }else{
+          message.error(data.message);
+        }
+
+      });
+    };
+
+    /**
      * 数据查询
      **/
     const handleQuery = () => {
@@ -176,7 +187,6 @@ export default defineComponent({
       });
     };
 
-
     onMounted(()=>{
       handleQuery();
       setTimeout(function (){
@@ -190,7 +200,6 @@ export default defineComponent({
     treeSelectData.value=[];
     const doc = ref();
     doc.value = {};
-    const modalVisible = ref(false);
     const modalLoading = ref(false);
     const editor = new E('#content')
     editor.config.zIndex = 0;
@@ -201,7 +210,7 @@ export default defineComponent({
         const data = response.data; // data = commonResp
         modalLoading.value = false;
         if (data.success){
-          modalVisible.value = false;
+          message.success("保存成功！");
           // 重新加载列表
           handleQuery();
         }else{
@@ -267,10 +276,9 @@ export default defineComponent({
     *  编辑
     * */
     const edit = (record: any) =>{
-
-      modalVisible.value = true;
+      editor.txt.clear();
       doc.value = Tool.copy(record);
-
+      handleQueryContent()
       treeSelectData.value = Tool.copy(level1.value);
       setDisable(treeSelectData.value,record.id);
 
@@ -283,7 +291,8 @@ export default defineComponent({
      * */
 
     const add = () =>{
-      modalVisible.value = true;
+      editor.txt.clear();
+
       doc.value = {
         ebookId:route.query.ebookId
       };
@@ -332,7 +341,6 @@ export default defineComponent({
       handleDelete,
       handleQuery,
       doc,
-      modalVisible,
       modalLoading,
       handleSave,
 
