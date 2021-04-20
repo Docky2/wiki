@@ -96,7 +96,12 @@ public class DocService {
 
     public String findContent(Long id){
         Content content = contentMapper.selectByPrimaryKey(id);
-        return content.getContent();
+        // 有可能出现空指针异常
+        if(ObjectUtils.isEmpty(content)){
+            return "";
+        }else{
+            return content.getContent();
+        }
     }
 
 

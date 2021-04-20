@@ -83,6 +83,12 @@
             <a-form-item label="顺序:" >
               <a-input v-model:value="doc.sort" placeholder="顺序"/>
             </a-form-item>
+            <a-form-item>
+              <a-button type="primary" @click="handlePreviewContent()">
+                <EyeOutlined /> 内容预览
+              </a-button>
+            </a-form-item>
+
             <a-form-item label="内容:">
               <div id="content" ></div>
             </a-form-item>
@@ -92,6 +98,14 @@
 
       </a-row>
 
+      <a-drawer
+          :closable="false"
+          :visible="drawerVisible"
+          placement="right"
+          width="900"
+          @close="onDrawerClose">
+        <div :innerHTML="previewHtml" class="wangeditor"></div>
+      </a-drawer>
 
     </a-layout-content>
   </a-layout>
@@ -118,6 +132,10 @@ export default defineComponent({
     param.value = {};
     const docs = ref();
     const loading = ref(false);
+    //因为树选择组件的属性状态，会随着当前编辑的节点而变化，所以单独声明
+    const treeSelectData = ref();
+    treeSelectData.value=[];
+
     const columns = [
       {
         title: '名称',
@@ -146,6 +164,19 @@ export default defineComponent({
 
     const level1 = ref();
     level1.value = [];
+
+    // -----------富文本预览----------
+    const drawerVisible = ref(false);
+    const previewHtml = ref();
+    const handlePreviewContent = () =>{
+      const html  = editor.txt.html();
+      previewHtml.value = html;
+      drawerVisible.value = true;
+    };
+    const onDrawerClose = () =>{
+      drawerVisible.value = false;
+    }
+
 
     /**
      * 内容查询
@@ -180,6 +211,9 @@ export default defineComponent({
           docs.value = data.content;
           level1.value = [];
           level1.value = Tool.array2Tree(docs.value,0);
+
+          treeSelectData.value = Tool.copy(level1.value);
+          treeSelectData.value.unshift({id:0,name:'无'});
         }else{
           message.error(data.message);
         }
@@ -196,8 +230,7 @@ export default defineComponent({
 
 
     // --------- 表单 ----------
-    const treeSelectData = ref();
-    treeSelectData.value=[];
+
     const doc = ref();
     doc.value = {};
     const modalLoading = ref(false);
@@ -344,7 +377,12 @@ export default defineComponent({
       modalLoading,
       handleSave,
 
-      treeSelectData
+      treeSelectData,
+
+      drawerVisible,
+      previewHtml,
+      handlePreviewContent,
+      onDrawerClose,
     }
   },
 });

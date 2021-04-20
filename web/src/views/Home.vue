@@ -42,7 +42,7 @@
 
             <a-list-item-meta :description="item.description">
               <template #title>
-                <router-link to="'/doc?ebookId=' + item.id">
+                <router-link :to="'/doc?ebookId=' + item.id">
                   {{item.name}}
                 </router-link>
               </template>
