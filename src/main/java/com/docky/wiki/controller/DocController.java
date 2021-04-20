@@ -1,10 +1,8 @@
 package com.docky.wiki.controller;
 
-import com.docky.wiki.req.DocQueryReq;
 import com.docky.wiki.req.DocSaveReq;
 import com.docky.wiki.resp.CommonResp;
 import com.docky.wiki.resp.DocQueryResp;
-import com.docky.wiki.resp.PageResp;
 import com.docky.wiki.service.DocService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -33,10 +31,10 @@ public class DocController {
         return resp;
     }
 
-    @RequestMapping(value = "/list",method = RequestMethod.GET)
-    public CommonResp list(@Valid DocQueryReq req) throws Exception{
-        CommonResp<PageResp<DocQueryResp>> resp = new CommonResp<>();
-        PageResp<DocQueryResp> list = docService.query(req);
+    @RequestMapping(value = "/list/{ebookId}",method = RequestMethod.GET)
+    public CommonResp list( @PathVariable Long ebookId) throws Exception{
+        CommonResp<List<DocQueryResp>> resp = new CommonResp<>();
+        List<DocQueryResp> list = docService.query(ebookId);
         resp.setContent(list);
         return resp;
     }

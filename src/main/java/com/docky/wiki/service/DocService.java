@@ -5,14 +5,10 @@ import com.docky.wiki.domain.Doc;
 import com.docky.wiki.domain.DocExample;
 import com.docky.wiki.mapper.ContentMapper;
 import com.docky.wiki.mapper.DocMapper;
-import com.docky.wiki.req.DocQueryReq;
 import com.docky.wiki.req.DocSaveReq;
 import com.docky.wiki.resp.DocQueryResp;
-import com.docky.wiki.resp.PageResp;
 import com.docky.wiki.util.CopyUtil;
 import com.docky.wiki.util.SnowFlake;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,22 +36,15 @@ public class DocService {
 /**
  * 分页查询
  * */
-    public PageResp<DocQueryResp> query(DocQueryReq req) {
-        // 分页查询，查第几页，每页三条
-        PageHelper.startPage(req.getPage(),req.getSize());
+    public List<DocQueryResp> query(Long ebookId) {
+
         DocExample docExample = new DocExample();
-        docExample.setOrderByClause("sort asc");
-        // 理解成where条件
         DocExample.Criteria criteria = docExample.createCriteria();
+        criteria.andEbookIdEqualTo(ebookId);
+        docExample.setOrderByClause("sort asc");
         List<Doc> docList = docMapper.selectByExample(docExample);
-        PageInfo<Doc> pageInfo = new PageInfo<>(docList);
-        // 一般返回Total 由前端去计算总页数
-        Log.info("总行数：{}",pageInfo.getTotal());
-        List<DocQueryResp> list = CopyUtil.copyList(docList, DocQueryResp.class);
-        PageResp<DocQueryResp> pageResp = new PageResp<>();
-        pageResp.setTotal(pageInfo.getTotal());
-        pageResp.setList(list);
-        return pageResp;
+        List<DocQueryResp> list  =CopyUtil.copyList(docList,DocQueryResp.class);
+        return list;
     }
 
     public List<DocQueryResp> all() {
