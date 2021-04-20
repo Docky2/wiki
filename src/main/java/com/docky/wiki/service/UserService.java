@@ -6,6 +6,7 @@ import com.docky.wiki.exception.BusinessException;
 import com.docky.wiki.exception.BusinessExceptionCode;
 import com.docky.wiki.mapper.UserMapper;
 import com.docky.wiki.req.UserQueryReq;
+import com.docky.wiki.req.UserResetPwdReq;
 import com.docky.wiki.req.UserSaveReq;
 import com.docky.wiki.resp.PageResp;
 import com.docky.wiki.resp.UserQueryResp;
@@ -100,5 +101,13 @@ public class UserService {
             return userList.get(0);
         }
     }
+        /**
+         * 修改密码
+         * */
 
+
+    public void resetPassword(UserResetPwdReq req){
+        User user = CopyUtil.copy(req,User.class);
+        userMapper.updateByPrimaryKeySelective(user);
+    }
 }

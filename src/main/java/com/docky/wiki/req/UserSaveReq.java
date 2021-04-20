@@ -1,7 +1,6 @@
 package com.docky.wiki.req;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 public class UserSaveReq {
     private Long id;
@@ -9,8 +8,8 @@ public class UserSaveReq {
     private String username;
     @NotNull(message = "昵称不能为空")
     private String name;
-    @NotNull(message = "密码不能为空")
-    @Pattern(regexp="^(?![0-9]+$)(?![a-zA-z]+$)[0-9A-Za-z]{6,20}$",message = "密码应该包含数字和英文，长度为6-20位")
+//    @NotNull(message = "密码不能为空")
+//    @Pattern(regexp="^(?![0-9]+$)(?![a-zA-z]+$)[0-9A-Za-z]{6,20}$",message = "密码应该包含数字和英文，长度为6-20位")
     private String password;
 
     public Long getId() {

@@ -1,10 +1,11 @@
 package com.docky.wiki.controller;
 
 import com.docky.wiki.req.UserQueryReq;
+import com.docky.wiki.req.UserResetPwdReq;
 import com.docky.wiki.req.UserSaveReq;
 import com.docky.wiki.resp.CommonResp;
-import com.docky.wiki.resp.UserQueryResp;
 import com.docky.wiki.resp.PageResp;
+import com.docky.wiki.resp.UserQueryResp;
 import com.docky.wiki.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
@@ -49,6 +50,14 @@ public class UserController {
     public CommonResp delete(@PathVariable Long id) throws Exception{
         CommonResp resp = new CommonResp<>();
         userService.delete(id);
+        return resp;
+    }
+
+    @RequestMapping(value = "/reset-password",method = RequestMethod.POST)
+    public CommonResp resetPassword(@RequestBody @Valid UserResetPwdReq req) throws Exception{
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        CommonResp resp = new CommonResp<>();
+        userService.resetPassword(req);
         return resp;
     }
 }

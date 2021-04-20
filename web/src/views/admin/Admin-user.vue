@@ -27,9 +27,9 @@
 
         <template v-slot:action="{text,record}">
           <a-space size="small">
-                <a-button type="primary" >
-                  重置密码
-                </a-button>
+            <a-button type="primary" @click="resetPassword(record)">
+              重置密码
+            </a-button>
             <a-button type="primary" @click="edit(record)">
               编辑
             </a-button>
@@ -48,6 +48,7 @@
       </a-table>
     </a-layout-content>
   </a-layout>
+
   <a-modal
       v-model:visible="modalVisible"
       :confirm-loading="modalLoading"
@@ -62,7 +63,21 @@
       <a-form-item label="昵称">
         <a-input v-model:value="user.name" />
       </a-form-item>
-      <a-form-item  label="密码">
+      <a-form-item v-show="!user.id" label="密码">
+        <a-input v-model:value="user.password" type="password" />
+      </a-form-item>
+    </a-form>
+  </a-modal>
+
+
+  <a-modal
+      v-model:visible="resetModalVisible"
+      :confirm-loading="resetModalLoading"
+      title="重置密码"
+      @ok="handleResetModalOk"
+  >
+    <a-form :label-col="{ span: 6}" :model="user" :wrapper-col="{ span: 18}">
+      <a-form-item  label="新密码">
         <a-input v-model:value="user.password" type="password" />
       </a-form-item>
     </a-form>
@@ -174,6 +189,7 @@ export default defineComponent({
       modalLoading.value = true;
       // KEY === 盐值
       user.value.password = hexMd5(user.value.password + KEY);
+
       axios.post("/user/save", user.value).then((response) => {
         modalLoading.value = false;
         const data = response.data; // data = commonResp
@@ -229,6 +245,42 @@ export default defineComponent({
         }
       });
     };
+    // -------- 重置密码 ---------
+    const resetModalVisible = ref(false);
+    const resetModalLoading = ref(false);
+    const handleResetModalOk = () => {
+      resetModalLoading.value = true;
+      // KEY === 盐值
+      user.value.password = hexMd5(user.value.password + KEY);
+      axios.post("/user/reset-password", user.value).then((response) => {
+        resetModalLoading.value = false;
+        const data = response.data; // data = commonResp
+        if (data.success) {
+          resetModalVisible.value = false;
+
+          // 重新加载列表
+          handleQuery({
+            page: pagination.value.current,
+            size: pagination.value.pageSize,
+          });
+        } else {
+          message.error(data.message);
+        }
+      });
+    };
+
+
+
+    /**
+     *  重置密码
+     * */
+    const resetPassword = (record: any) =>{
+      resetModalVisible.value = true;
+      user.value = Tool.copy(record);
+      user.value.password = null;
+    };
+
+
 
     onMounted(()=>{
       handleQuery({
@@ -253,6 +305,11 @@ export default defineComponent({
       modalVisible,
       modalLoading,
       handleModalOk,
+
+      resetModalVisible,
+      resetModalLoading,
+      handleResetModalOk,
+      resetPassword,
     }
   },
 });
