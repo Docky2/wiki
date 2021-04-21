@@ -1,10 +1,12 @@
 package com.docky.wiki.controller;
 
+import com.docky.wiki.req.UserLoginReq;
 import com.docky.wiki.req.UserQueryReq;
 import com.docky.wiki.req.UserResetPwdReq;
 import com.docky.wiki.req.UserSaveReq;
 import com.docky.wiki.resp.CommonResp;
 import com.docky.wiki.resp.PageResp;
+import com.docky.wiki.resp.UserLoginResp;
 import com.docky.wiki.resp.UserQueryResp;
 import com.docky.wiki.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +60,15 @@ public class UserController {
         req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp resp = new CommonResp<>();
         userService.resetPassword(req);
+        return resp;
+    }
+
+    @RequestMapping(value = "/login",method = RequestMethod.POST)
+    public CommonResp login(@RequestBody @Valid UserLoginReq req) throws Exception{
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        CommonResp<UserLoginResp> resp = new CommonResp<>();
+        UserLoginResp userLoginResp = userService.login(req);
+        resp.setContent(userLoginResp);
         return resp;
     }
 }

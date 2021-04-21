@@ -5,10 +5,12 @@ import com.docky.wiki.domain.UserExample;
 import com.docky.wiki.exception.BusinessException;
 import com.docky.wiki.exception.BusinessExceptionCode;
 import com.docky.wiki.mapper.UserMapper;
+import com.docky.wiki.req.UserLoginReq;
 import com.docky.wiki.req.UserQueryReq;
 import com.docky.wiki.req.UserResetPwdReq;
 import com.docky.wiki.req.UserSaveReq;
 import com.docky.wiki.resp.PageResp;
+import com.docky.wiki.resp.UserLoginResp;
 import com.docky.wiki.resp.UserQueryResp;
 import com.docky.wiki.util.CopyUtil;
 import com.docky.wiki.util.SnowFlake;
@@ -101,13 +103,36 @@ public class UserService {
             return userList.get(0);
         }
     }
-        /**
-         * 修改密码
-         * */
 
 
+    /**
+     * 修改密码
+     * */
     public void resetPassword(UserResetPwdReq req){
         User user = CopyUtil.copy(req,User.class);
         userMapper.updateByPrimaryKeySelective(user);
+    }
+
+    /**
+     * 登录
+     * */
+
+    public UserLoginResp login(UserLoginReq req){
+        User user = selectByUsername(req.getUsername());
+        if(ObjectUtils.isEmpty(user)){
+            //用户名不存在
+            Log.info("用户名不存在,{}",req.getUsername());
+            throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+        }else{
+            if(user.getPassword().equals(req.getPassword())){
+                //登陆成功
+                UserLoginResp userLoginResp = CopyUtil.copy(user,UserLoginResp.class);
+                return userLoginResp;
+            }else{
+                //密码错误
+                Log.info("密码错误");
+                throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+            }
+        }
     }
 }
