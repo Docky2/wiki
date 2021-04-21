@@ -17,14 +17,14 @@
       </a>
     </a-menu>
 
-    <a-modal v-model:Visible="loginModalVisible"
+    <a-modal v-model:visible="loginModalVisible"
              :confirm-loading="loginModalLoading"
              title="登录"
              @ok="login"
     >
       <a-form :label-col="{ span: 6 }" :model="loginUser" :wrapper-col="{ span: 18 }">
         <a-form-item label="登录名">
-          <a-input v-model:value="loginUser.loginName" />
+          <a-input v-model:value="loginUser.username" />
         </a-form-item>
         <a-form-item label="密码">
           <a-input v-model:value="loginUser.password" type="password" />
@@ -51,12 +51,12 @@ export default defineComponent({
   setup(){
 
     // 登录后保存
-    const user = computed(() => store.state.user);
+    // const user = computed(() => store.state.user);
 
     // 用来登录
     const loginUser = ref({
-      loginName: "test",
-      password: "test"
+      username: "test",
+      password: "test123"
     });
     const loginModalVisible = ref(false);
     const loginModalLoading = ref(false);
@@ -84,18 +84,18 @@ export default defineComponent({
 
 
     // 退出登录
-    const logout = () => {
-      console.log("退出登录开始");
-      axios.get('/user/logout/' + user.value.token).then((response) => {
-        const data = response.data;
-        if (data.success) {
-          message.success("退出登录成功！");
-          store.commit("setUser", {});
-        } else {
-          message.error(data.message);
-        }
-      });
-    };
+    // const logout = () => {
+    //   console.log("退出登录开始");
+    //   axios.get('/user/logout/' + user.value.token).then((response) => {
+    //     const data = response.data;
+    //     if (data.success) {
+    //       message.success("退出登录成功！");
+    //       store.commit("setUser", {});
+    //     } else {
+    //       message.error(data.message);
+    //     }
+    //   });
+    // };
 
     return {
       loginModalVisible,
@@ -103,8 +103,8 @@ export default defineComponent({
       showLoginModal,
       loginUser,
       login,
-      user,
-      logout
+      // user,
+      // logout
     }
 
   }
