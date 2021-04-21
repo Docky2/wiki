@@ -8,7 +8,7 @@ public class UserLoginReq {
     private String username;
 
     @NotEmpty(message = "密码不能为空")
-    @Pattern(regexp="^(?![0-9]+$)(?![a-zA-z]+$)[0-9A-Za-z]{6,20}$",message =
+    @Pattern(regexp="^(?![0-9]+$)(?![a-zA-z]+$)[0-9A-Za-z]{6,50}$",message =
             "密码应该包含数字和英文，长度为6-20位")
     private String password;
 

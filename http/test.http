@@ -20,3 +20,12 @@ name=Test
 ###
 
 GET http://localhost:8081/demo/list
+
+
+###
+GET http://localhost:8081/redis/set/123/test
+Accept: application/json
+
+###
+GET http://localhost:8081/redis/get/123
+Accept: application/json
