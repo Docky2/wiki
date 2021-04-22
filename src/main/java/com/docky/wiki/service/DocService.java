@@ -66,6 +66,8 @@ public class DocService {
         if(ObjectUtils.isEmpty(req.getId())){
             // 新增
             doc.setId(snowFlake.nextId());
+            doc.setViewCount(0);
+            doc.setVoteCount(0);
             docMapper.insert(doc);
 
             content.setId(doc.getId());
@@ -96,6 +98,8 @@ public class DocService {
 
     public String findContent(Long id){
         Content content = contentMapper.selectByPrimaryKey(id);
+        //文档阅读数加一
+        docMapper.increaseViewCount(id);
         // 有可能出现空指针异常
         if(ObjectUtils.isEmpty(content)){
             return "";

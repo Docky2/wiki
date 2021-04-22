@@ -106,10 +106,12 @@ export default defineComponent({
         if (data.success) {
           message.success("退出登录成功！");
           store.commit("setUser", {});
+          window.location.href="/";
         } else {
           message.error(data.message);
         }
       });
+
     };
 
     return {
