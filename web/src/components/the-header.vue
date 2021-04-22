@@ -12,7 +12,9 @@
       <a-menu-item key="/admin/ebook"><router-link to="/admin/ebook">电子书管理</router-link></a-menu-item>
       <a-menu-item key="/admin/category"><router-link to="/admin/category">分类管理</router-link></a-menu-item>
       <a-menu-item key="/about"><router-link to="/about">关于我们</router-link></a-menu-item>
-      <a class="login-menu" @click="showLoginModal">
+      <a v-show="user.id"  class="login-menu">
+        <span>您好: {{user.name}}</span></a>
+      <a v-show="!user.id" class="login-menu" @click="showLoginModal">
         <span>登录</span>
       </a>
     </a-menu>
@@ -37,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent ,ref,computed } from 'vue';
+import { defineComponent ,ref,computed} from 'vue';
 import store from "@/store";
 import axios from 'axios';
 import { message } from 'ant-design-vue';
@@ -50,13 +52,13 @@ export default defineComponent({
   name: 'the-header',
   setup(){
 
-    // 登录后保存
-    // const user = computed(() => store.state.user);
+    //登录后保存
+    const user = computed(() => store.state.user);
 
     // 用来登录
     const loginUser = ref({
-      username: "test",
-      password: "test123"
+      username: "docky",
+      password: "abc123456"
     });
     const loginModalVisible = ref(false);
     const loginModalLoading = ref(false);
@@ -74,7 +76,6 @@ export default defineComponent({
         if (data.success) {
           loginModalVisible.value = false;
           message.success("登录成功！");
-
           store.commit("setUser", data.content);
         } else {
           message.error(data.message);
@@ -103,7 +104,7 @@ export default defineComponent({
       showLoginModal,
       loginUser,
       login,
-      // user,
+      user,
       // logout
     }
 
