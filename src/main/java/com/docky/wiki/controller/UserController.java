@@ -96,4 +96,18 @@ public class UserController {
         resp.setContent(userLoginResp);
         return resp;
     }
+
+
+    /**
+     * 删除功能
+     * */
+    @RequestMapping(value = "/logout/{token}",method = RequestMethod.GET)
+    public CommonResp logout(@PathVariable String token) throws Exception{
+        CommonResp resp = new CommonResp<>();
+        redisTemplate.delete(token);
+        log.info("从redis中删除token:{}",token);
+        return resp;
+    }
+
+
 }

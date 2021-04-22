@@ -12,11 +12,26 @@
       <a-menu-item key="/admin/ebook"><router-link to="/admin/ebook">电子书管理</router-link></a-menu-item>
       <a-menu-item key="/admin/category"><router-link to="/admin/category">分类管理</router-link></a-menu-item>
       <a-menu-item key="/about"><router-link to="/about">关于我们</router-link></a-menu-item>
+
+      <a-popconfirm
+          cancel-text="否"
+          ok-text="是"
+          title="确认退出登录？"
+          @confirm="logout()"
+      >      <a v-show="user.id"  class="login-menu"  >
+        <span>注销</span></a>
+      </a-popconfirm>
+
       <a v-show="user.id"  class="login-menu">
-        <span>您好: {{user.name}}</span></a>
+        <span>您好: {{user.name}}</span>
+      </a>
+
       <a v-show="!user.id" class="login-menu" @click="showLoginModal">
         <span>登录</span>
       </a>
+
+
+
     </a-menu>
 
     <a-modal v-model:visible="loginModalVisible"
@@ -85,18 +100,17 @@ export default defineComponent({
 
 
     // 退出登录
-    // const logout = () => {
-    //   console.log("退出登录开始");
-    //   axios.get('/user/logout/' + user.value.token).then((response) => {
-    //     const data = response.data;
-    //     if (data.success) {
-    //       message.success("退出登录成功！");
-    //       store.commit("setUser", {});
-    //     } else {
-    //       message.error(data.message);
-    //     }
-    //   });
-    // };
+    const logout = () => {
+      axios.get('/user/logout/' + user.value.token).then((response) => {
+        const data = response.data;
+        if (data.success) {
+          message.success("退出登录成功！");
+          store.commit("setUser", {});
+        } else {
+          message.error(data.message);
+        }
+      });
+    };
 
     return {
       loginModalVisible,
@@ -105,7 +119,7 @@ export default defineComponent({
       loginUser,
       login,
       user,
-      // logout
+      logout
     }
 
   }
@@ -116,5 +130,6 @@ export default defineComponent({
   .login-menu{
     float: right;
     color: white;
+    padding-left: 20px;
   }
 </style>
