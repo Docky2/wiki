@@ -25,6 +25,11 @@
             <a-divider style="height: 2px;background-color: #9999cc" />
           </div>
           <div :innerHTML="html" class="wangeditor"></div>
+          <div class="vote-div">
+            <a-button :size="'large'" shape = "round" type="primary" @click="vote">
+              <template #icon><LikeOutlined /> &nbsp;点赞:{{doc.voteCount}}</template>
+            </a-button>
+          </div>
         </a-col>
       </a-row>
     </a-layout-content>
@@ -83,6 +88,17 @@ export default defineComponent({
       }
     };
 
+    const vote=()=>{
+      axios.get('/doc/vote/' + doc.value.id).then((response)=>{
+        const data = response.data;
+        if(data.success){
+          doc.value.voteCount++;
+        }else{
+          message.error(data.message);
+        }
+
+      })
+    }
 
     /**
      * 数据查询
@@ -121,6 +137,7 @@ export default defineComponent({
       onSelect,
       defaultSelectedKeys,
       doc,
+      vote,
     }
   },
 });

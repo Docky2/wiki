@@ -2,6 +2,7 @@ package com.docky.wiki.aspect;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.support.spring.PropertyPreFilters;
+import com.docky.wiki.util.RequestContext;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -47,7 +48,7 @@ public class LogAspect {
         LOG.info("类名方法: {}.{}", signature.getDeclaringTypeName(), name);
         LOG.info("远程地址: {}", request.getRemoteAddr());
 
-
+        RequestContext.setRemoteAddr(getRemoteIp(request));
         // 打印请求参数
         Object[] args = joinPoint.getArgs();
 		// LOG.info("请求参数: {}", JSONObject.toJSONString(args));
@@ -90,10 +91,26 @@ public class LogAspect {
      * @return
      */
     public String getRemoteIp(HttpServletRequest request) {
-        String ip = request.getHeader("x-forwarded-for");
+
+        /* nginx代理一般会加上此请求头 */
+        String ip = request.getHeader("X-Real-IP");
+
+        /*
+         * X-Forwarded-For 这是一个 Squid 开发的字段，只有在通过了 HTTP 代理或者负载均衡服务器时才会添加该项。
+         * 格式为X-Forwarded-For: client1, proxy1, proxy2，一般情况下，第一个ip为客户端真实ip，
+         * 后面的为经过的代理服务器ip。现在大部分的代理都会加上这个请求头
+         * */
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("x-forwarded-for");
+        }
+
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
         }
+        /*Proxy-Client-IP/WL- Proxy-Client-IP
+        *这个一般是经过apache http服务器的请求才会有，用apache http做代理时一般会加上Proxy-Client-IP请求头，
+        *而WL- Proxy-Client-IP是他的weblogic插件加上的头
+        * */
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("WL-Proxy-Client-IP");
         }

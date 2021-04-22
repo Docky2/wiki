@@ -72,4 +72,11 @@ public class DocController {
         resp.setContent(content);
         return resp;
     }
+
+    @RequestMapping(value = "/vote/{id}",method = RequestMethod.GET)
+    public CommonResp vote(@PathVariable Long id) throws Exception{
+        CommonResp resp = new CommonResp<>();
+        docService.vote(id);
+        return resp;
+    }
 }

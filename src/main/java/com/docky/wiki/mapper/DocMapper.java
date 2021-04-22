@@ -33,4 +33,7 @@ public interface DocMapper {
     @Update("update doc set view_count = view_count+1 where id = #{id}")
     void increaseViewCount(Long id);
 
+    @Update("update doc set vote_count = vote_count+1 where id = #{id}")
+    void increaseVoteCount(Long id);
+
 }
