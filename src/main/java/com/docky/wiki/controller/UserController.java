@@ -90,7 +90,7 @@ public class UserController {
 
         // key是token value 是 UserLoginResp
         userLoginResp.setToken(token.toString());
-        redisTemplate.opsForValue().set(token, JSONObject.toJSONString(userLoginResp),3600*24, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(token.toString(), JSONObject.toJSONString(userLoginResp),3600*24, TimeUnit.SECONDS);
 
 
         resp.setContent(userLoginResp);

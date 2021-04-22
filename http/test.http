@@ -19,13 +19,20 @@ name=Test
 
 ###
 
-GET http://localhost:8081/demo/list
-
+POST http://localhost:8081/category/save
+Accept: application/json
+token: 40250069529792512
 
 ###
 GET http://localhost:8081/redis/set/123/test
 Accept: application/json
 
+
 ###
-GET http://localhost:8081/redis/get/123
+GET http://localhost:8081/redis/get/40250069529792512
 Accept: application/json
+
+###
+POST http://127.0.0.1:8081/user/logout/40250069529792512
+Accept: application/json
+token: 40250069529792512
