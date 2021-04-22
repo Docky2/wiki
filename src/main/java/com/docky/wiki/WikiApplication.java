@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * @author Docky
@@ -14,6 +15,7 @@ import org.springframework.core.env.Environment;
  */
 @MapperScan("com.docky.wiki.mapper")
 @SpringBootApplication
+@EnableScheduling
 public class WikiApplication {
     private  static final Logger LOG = (Logger) LoggerFactory.getLogger(WikiApplication.class);
     public static void main(String[] args) {
