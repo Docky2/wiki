@@ -6,6 +6,8 @@ import AdminCategory from '../views/admin/Admin-category.vue'
 import AdminDoc from '../views/admin/Admin-doc.vue'
 import Doc from '../views/Doc.vue';
 import AdminUser from '../views/admin/Admin-user.vue'
+import store from "@/store";
+import {Tool} from "@/util/tool";
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -29,22 +31,34 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/admin/ebook',
     name: 'AdminEbook',
-    component: AdminEbook
+    component: AdminEbook,
+    meta:{
+      loginRequire :true
+    }
   },
   {
     path: '/admin/category',
     name: 'AdminCategory',
-    component: AdminCategory
+    component: AdminCategory,
+    meta:{
+      loginRequire :true
+    }
   },
   {
     path: '/admin/doc',
     name: 'AdminDoc',
-    component: AdminDoc
+    component: AdminDoc,
+    meta:{
+      loginRequire :true
+    }
   },
   {
     path: '/admin/user',
     name: 'AdminUser',
-    component: AdminUser
+    component: AdminUser,
+    meta:{
+      loginRequire :true
+    }
   },
 ]
 
@@ -52,5 +66,22 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+// 路由登录拦截
+router.beforeEach((to, from, next) => {
+  // 要不要对meta.loginRequire属性做监控拦截
+  if (to.matched.some(function (item) {
+    return item.meta.loginRequire
+  })) {
+    const loginUser = store.state.user;
+    if (Tool.isEmpty(loginUser)) {
+      next('/');
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
+
 
 export default router
