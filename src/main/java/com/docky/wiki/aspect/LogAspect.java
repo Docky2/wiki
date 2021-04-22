@@ -3,6 +3,7 @@ package com.docky.wiki.aspect;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.support.spring.PropertyPreFilters;
 import com.docky.wiki.util.RequestContext;
+import com.docky.wiki.util.SnowFlake;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -12,6 +13,8 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -25,6 +28,9 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class LogAspect {
 
+    @Autowired
+    private SnowFlake snowFlake;
+
     private final static Logger LOG = LoggerFactory.getLogger(LogAspect.class);
 
     /** 定义一个切点  监控所有的Controller  ..代表所有参数 */
@@ -34,8 +40,8 @@ public class LogAspect {
     /** 前置通知  放置执行业务代码之前，需要去做的事情 */
     @Before("controllerPointcut()")
     public void doBefore(JoinPoint joinPoint) throws Throwable {
-
-
+        //增加日志流水号
+        MDC.put("LOG_ID",String.valueOf(snowFlake.nextId()));
         // 开始打印请求日志
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
@@ -91,6 +97,7 @@ public class LogAspect {
      * @return
      */
     public String getRemoteIp(HttpServletRequest request) {
+
 
         /* nginx代理一般会加上此请求头 */
         String ip = request.getHeader("X-Real-IP");
