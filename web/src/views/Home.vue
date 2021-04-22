@@ -26,7 +26,7 @@
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
     <div v-show="isShowWelcome" class="welcome">
-      <h1>欢迎使用！</h1>
+      <the-welcome></the-welcome>
     </div>
 
       <a-list v-show="!isShowWelcome" :data-source="ebooks" :grid="{ gutter: 20, column: 3 }" :pagination="false" item-layout="vertical" size="large">
@@ -71,9 +71,13 @@ import {defineComponent, onMounted, ref, reactive, toRef} from 'vue';
 import axios from 'axios';
 import {message} from "ant-design-vue";
 import {Tool} from "@/util/tool";
+import TheWelcome from "@/components/the-welcome.vue";
 
 export default defineComponent({
   name: 'Home',
+  components:{
+    TheWelcome,
+  },
   setup() {
     const ebooks = ref();  //ref() 函数让其变为一个响应式的数据
     let categoryId2 = 0;
