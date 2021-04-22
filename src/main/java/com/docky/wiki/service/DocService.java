@@ -121,10 +121,14 @@ public class DocService {
     public void vote(Long id) {
         //远程IP+doc.id 作为key，24小时内不能重复
         String key = RequestContext.getRemoteAddr();
-        if (redisUtil.validateRepeat("Doc_VOTE_" + "_" + key, 3600 * 24)) {
+        if (redisUtil.validateRepeat("Doc_VOTE_" + id + "_" + key, 3600 * 24)) {
             docMapper.increaseVoteCount(id);
         }else{
             throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
         }
+    }
+
+    public void updateEbookInfo(){
+        docMapper.updateEbookInfo();
     }
 }

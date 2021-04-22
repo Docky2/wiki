@@ -30,10 +30,16 @@ public interface DocMapper {
 
     int updateByPrimaryKey(Doc record);
 
+    /* 往下均为自定义方法 */
     @Update("update doc set view_count = view_count+1 where id = #{id}")
     void increaseViewCount(Long id);
 
     @Update("update doc set vote_count = vote_count+1 where id = #{id}")
     void increaseVoteCount(Long id);
+
+    @Update("update ebook t1,(select ebook_id,count(*) doc_count,sum(view_count) view_count,sum(vote_count) vote_count\n" +
+            "from doc group by ebook_id) t2 set t1.doc_count = t2.doc_count,t1.view_count = t2.view_count,t1.vote_count= t2.vote_count\n" +
+            "where t1.id = t2.ebook_id\n")
+    void updateEbookInfo();
 
 }

@@ -73,6 +73,9 @@ public class DocController {
         return resp;
     }
 
+    /**
+     * 点赞功能
+     * */
     @RequestMapping(value = "/vote/{id}",method = RequestMethod.GET)
     public CommonResp vote(@PathVariable Long id) throws Exception{
         CommonResp resp = new CommonResp<>();
